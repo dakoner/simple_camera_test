@@ -1,0 +1,18 @@
+[project]
+name = "simple_camera_test"
+version = "0.1.0"
+dependencies = [
+    "opencv-python",
+    "pyqt6",
+]
+
+[tool.setuptools]
+py_modules = [
+    "config",
+    "gige_camera_qobject",
+    "main_window",
+    "microscope_controller",
+    "mvsdk",
+    "pyspin_camera_qobject",
+    "uvc_camera_qobject",
+]
