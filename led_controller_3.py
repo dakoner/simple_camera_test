@@ -26,6 +26,33 @@ class Program:
         self.a_step = 0
 
 
+        # # # # Camera trigger
+        # self.trigger = Pin(TRIGGER_PIN, Pin.OUT, Pin.PULL_DOWN)
+        # self.trigger.off()
+
+        # # # # Camera strobe
+        # self.strobe = Pin(STROBE_PIN, Pin.IN)
+        # self.strobe.irq(trigger=Pin.IRQ_RISING|Pin.IRQ_FALLING, handler=self.handle)
+
+
+    # def cb(self, timer):
+    #     self.led.off()
+
+    # def handle(self, pin):
+    #     if pin.value():
+    #        self.led.off()
+    #        print("rising")
+    #     else:
+    #        self.led.on()
+    #        print("falling")
+     #self.tim0.init(period=1000, mode=Timer.ONE_SHOT, callback=self.cb)
+        # if not pin.value():
+        #     self.rmt = esp32.RMT(0, pin=self.led, clock_div=64) # 1 time unit = 3 us
+        #     self.rmt.write_pulses((32767,), 1)  # Send HIGH for 32767 * 100ns = 3ms
+        # else:
+        #     self.rmt.deinit()
+
+           
     def handle_a_command(self, line):
         from machine import DAC
 
@@ -274,7 +301,32 @@ class Program:
         time.sleep_us(pulse_len_us)
         pin.off()
         print(f"Pin {pin_num} pulse finished.")
-        
+         # elif line.startswith('Q'):
+                #     rmt = esp32.RMT(0, pin=Pin(LED_PIN), clock_div=1) # 1 time unit = 3 us
+                #     rmt.write_pulses((10,), 1)
+                #     rmt.wait_done()
+                #     rmt.deinit()
+ elif line.startswith('C'):
+                    s = line.split(' ')
+                    self.trigger.off()
+                    utime.sleep_ms(10)
+                    delay = int(s[1])
+                    print("trigger camera for", delay)
+                    self.trigger.on()
+                    #utime.sleep_us(delay)
+                    utime.sleep_ms(delay)
+                    self.trigger.off()
+ # elif line.startswith('N'):
+                #     s = line.split(' ')
+                #     b = bool(int(s[1]))
+                #     if b:
+                #         print("trigger on")
+                #         self.trigger.on()
+                #     else:
+                #         print("trigger off")
+                #         self.trigger.off()
+            else:
+                
     def loop(self):
         command_map = {
             'A': self.handle_a_command,
