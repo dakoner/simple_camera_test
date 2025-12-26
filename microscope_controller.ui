@@ -34,29 +34,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QLabel" name="image_view">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>640</width>
-        <height>480</height>
-       </size>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::StrongFocus</enum>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
+     <widget class="ImageWidget" name="image_view" native="true"/>
     </item>
    </layout>
   </widget>
@@ -260,6 +238,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ImageWidget</class>
+   <extends>QWidget</extends>
+   <header>main_window</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -8,6 +8,41 @@ import uvc_camera_qobject
 from config import CAMERA
 
 
+class ImageWidget(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.image = None
+        self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+
+    def set_image(self, img):
+        if img is None:
+            return
+        s = img.shape
+        if len(s) == 2:
+            s = (s[0], s[1], 1)
+
+        if s[2] == 1:
+            format = QtGui.QImage.Format.Format_Grayscale8
+        elif s[2] == 3:
+            format = QtGui.QImage.Format.Format_BGR888
+        else:
+            # Unsupported format
+            return
+
+        image = QtGui.QImage(img.data, s[1], s[0], s[1] * s[2], format)
+        self.image = image.mirrored(horizontal=False, vertical=False)
+        self.update()
+
+    def paintEvent(self, event):
+        if self.image and not self.image.isNull():
+            painter = QtGui.QPainter(self)
+            pixmap = QtGui.QPixmap.fromImage(self.image)
+            scaled_pixmap = pixmap.scaled(self.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation)
+            x = (self.width() - scaled_pixmap.width()) / 2
+            y = (self.height() - scaled_pixmap.height()) / 2
+            painter.drawPixmap(int(x), int(y), scaled_pixmap)
+
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -98,17 +133,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def imageChanged(self, img):
         self.frame_count += 1
-        s = img.shape
-        if s[2] == 1:
-            format = QtGui.QImage.Format.Format_Grayscale8
-        elif s[2] == 3:
-            format = QtGui.QImage.Format.Format_BGR888
-        image = QtGui.QImage(img, s[1], s[0], format)
-        image = image.mirrored(horizontal=False, vertical=False)
-        self.curr_image = image
-        pixmap = QtGui.QPixmap.fromImage(image)
-        pixmap = pixmap.scaled(self.image_view.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation)
-        self.image_view.setPixmap( pixmap )
+        self.image_view.set_image(img)
 
     def update_fps_status(self):
         self.fps = self.frame_count
