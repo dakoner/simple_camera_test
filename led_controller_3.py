@@ -5,8 +5,7 @@ from array import array
 from esp32 import RMT
 from machine import Pin, PWM, reset, Timer
 
-PIN0 = 6
-PIN1 = 7
+STROBE_PIN=8
 
 class Program:
     def __init__(self):
@@ -30,21 +29,16 @@ class Program:
         # self.trigger = Pin(TRIGGER_PIN, Pin.OUT, Pin.PULL_DOWN)
         # self.trigger.off()
 
-        # # # # Camera strobe
-        # self.strobe = Pin(STROBE_PIN, Pin.IN)
-        # self.strobe.irq(trigger=Pin.IRQ_RISING|Pin.IRQ_FALLING, handler=self.handle)
+        # # # Camera strobe
+        self.strobe = Pin(STROBE_PIN, Pin.IN)
+        self.strobe.irq(trigger=Pin.IRQ_RISING|Pin.IRQ_FALLING, handler=self.handle)
 
 
     # def cb(self, timer):
     #     self.led.off()
 
-    # def handle(self, pin):
-    #     if pin.value():
-    #        self.led.off()
-    #        print("rising")
-    #     else:
-    #        self.led.on()
-    #        print("falling")
+    def handle(self, pin):
+        print(pin.value())
      #self.tim0.init(period=1000, mode=Timer.ONE_SHOT, callback=self.cb)
         # if not pin.value():
         #     self.rmt = esp32.RMT(0, pin=self.led, clock_div=64) # 1 time unit = 3 us
@@ -255,6 +249,12 @@ class Program:
 
         print("Started rmt")
 
+
+        # elif line.startswith('Q'):
+        #     rmt = esp32.RMT(0, pin=Pin(LED_PIN), clock_div=1) # 1 time unit = 3 us
+        #     rmt.write_pulses((10,), 1)
+        #     rmt.wait_done()
+        #     rmt.deinit()
     def cb(self, timer):
         pin = self.timers[timer]
         pin_obj = self.pins[pin]
@@ -301,31 +301,26 @@ class Program:
         time.sleep_us(pulse_len_us)
         pin.off()
         print(f"Pin {pin_num} pulse finished.")
-         # elif line.startswith('Q'):
-                #     rmt = esp32.RMT(0, pin=Pin(LED_PIN), clock_div=1) # 1 time unit = 3 us
-                #     rmt.write_pulses((10,), 1)
-                #     rmt.wait_done()
-                #     rmt.deinit()
- elif line.startswith('C'):
-                    s = line.split(' ')
-                    self.trigger.off()
-                    utime.sleep_ms(10)
-                    delay = int(s[1])
-                    print("trigger camera for", delay)
-                    self.trigger.on()
-                    #utime.sleep_us(delay)
-                    utime.sleep_ms(delay)
-                    self.trigger.off()
- # elif line.startswith('N'):
-                #     s = line.split(' ')
-                #     b = bool(int(s[1]))
-                #     if b:
-                #         print("trigger on")
-                #         self.trigger.on()
-                #     else:
-                #         print("trigger off")
-                #         self.trigger.off()
-            else:
+
+    def handle_c_command(self, line):
+        s = line.split(' ')
+        self.trigger.off()
+        utime.sleep_ms(10)
+        delay = int(s[1])
+        print("trigger camera for", delay)
+        self.trigger.on()
+        #utime.sleep_us(delay)
+        utime.sleep_ms(delay)
+        self.trigger.off()
+        # elif line.startswith('N'):
+        #     s = line.split(' ')
+        #     b = bool(int(s[1]))
+        #     if b:
+        #         print("trigger on")
+        #         self.trigger.on()
+        #     else:
+        #         print("trigger off")
+        #         self.trigger.off()
                 
     def loop(self):
         command_map = {
@@ -337,7 +332,7 @@ class Program:
             'Q': self.handle_q_command,
             'F': self.handle_f_command,
             'U': self.handle_u_command,
-        }
+            'C': self.handle_c_command, }
         while True:
             try:
                 sys.stdout.write('controller:> ')
