@@ -1,6 +1,5 @@
 import time
 import signal
-import sys
 import numpy as np
 import pdb
 from PyQt6 import QtCore
@@ -172,6 +171,7 @@ class GigECamera(QtCore.QObject):
         frame = np.frombuffer(frame_data, dtype=np.uint8)
         frame = frame.reshape((FrameHead.iHeight, FrameHead.iWidth, 1 if FrameHead.uiMediaType == mvsdk.CAMERA_MEDIA_TYPE_MONO8 else 3) )
 
+        frame = np.flip(frame, axis=0).copy()
         self.imageChanged.emit(frame)
 
     def snapshot(self):
@@ -184,6 +184,7 @@ class GigECamera(QtCore.QObject):
         frame_data = (mvsdk.c_ubyte * FrameHead.uBytes).from_address(pFrameBuffer)
         frame = np.frombuffer(frame_data, dtype=np.uint8)
         frame = frame.reshape((FrameHead.iHeight, FrameHead.iWidth, 1 if FrameHead.uiMediaType == mvsdk.CAMERA_MEDIA_TYPE_MONO8 else 3) )
+        frame = np.flip(frame, axis=0).copy()
         self.snapshotCompleted.emit(frame)
         
     def begin(self):

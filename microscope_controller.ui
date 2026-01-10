@@ -169,7 +169,7 @@
            <string>Manual</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_9">
-           <item row="1" column="1">
+           <item row="1" column="2">
             <widget class="QSlider" name="exposureTimeSlider_3">
              <property name="maximum">
               <number>0</number>
@@ -189,7 +189,7 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item row="0" column="2">
             <widget class="QSlider" name="analogGainSlider_3">
              <property name="maximum">
               <number>0</number>
@@ -209,17 +209,49 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="exposureTimeLabel_3">
+           <item row="1" column="4">
+            <widget class="QSpinBox" name="exposureTimeSpinBox"/>
+           </item>
+           <item row="0" column="4">
+            <widget class="QSpinBox" name="analogGainSpinBox"/>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="analogGainMinLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string>Min</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="analogGainLabel_3">
+           <item row="0" column="3">
+            <widget class="QLabel" name="analogGainMaxLabel">
              <property name="text">
-              <string>TextLabel</string>
+              <string>Max</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="exposureTimeMinLabel">
+             <property name="text">
+              <string>Min</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLabel" name="exposureTimeMaxLabel">
+             <property name="text">
+              <string>Max</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
