@@ -30,7 +30,7 @@ class ImageWidget(QtWidgets.QWidget):
             return
 
         image = QtGui.QImage(img.data, s[1], s[0], s[1] * s[2], format)
-        self.image = image.mirrored(horizontal=False, vertical=False)
+        self.image = image.mirrored(horizontal=False, vertical=True)
         self.update()
 
     def paintEvent(self, event):
